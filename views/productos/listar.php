@@ -48,7 +48,7 @@
     </div> <!-- ./card --> 
     <!-- Botón volver -->
     <div class="text-center mt-4">
-      <?php $baseURL = "/tecnoperu"; ?>
+      <?php $baseURL = ""; ?>
       <a href="<?= $baseURL ?>/index.php" class="btn btn-secondary">
         <i class="fa-solid fa-arrow-left"></i> Volver al Dashboard
       </a>
