@@ -1,7 +1,7 @@
 <?php
 
 // Habilitar CORS y definir cabeceras JSON
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: https://ws1438421-hxe8h7hqehh8gjac.canadacentral-01.azurewebsites.net');
 header('Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Content-Type: application/json; charset=utf-8');
