@@ -45,11 +45,12 @@
           </tbody>
         </table>
       </div> <!-- ./card-body -->
-    </div> <!-- ./card -->
+    </div> <!-- ./card --> 
     <!-- Botón volver -->
     <div class="text-center mt-4">
-      <a href="/tecnoperu/index.php" class="btn btn-secondary">
-        <i class="fa-solid fa-arrow-left"></i> Volver al Inicio
+      <?php $baseURL = "/tecnoperu"; ?>
+      <a href="<?= $baseURL ?>/index.php" class="btn btn-secondary">
+        <i class="fa-solid fa-arrow-left"></i> Volver al Dashboard
       </a>
     </div>
 
