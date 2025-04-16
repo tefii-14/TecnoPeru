@@ -74,12 +74,6 @@
         </div>
       </div> <!-- ./card -->
     </form>
-    <!-- Botón volver -->
-    <div class="text-center mt-4">
-      <a href="../dashboard.php" class="btn btn-secondary">
-        <i class="fa-solid fa-arrow-left"></i> Volver al Dashboard
-      </a>
-    </div>
 
   </div> <!-- ./container -->
   

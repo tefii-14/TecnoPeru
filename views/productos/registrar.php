@@ -76,8 +76,8 @@
     </form>
     <!-- Botón volver -->
     <div class="text-center mt-4">
-      <a href="../dashboard.php" class="btn btn-secondary">
-        <i class="fa-solid fa-arrow-left"></i> Volver al Dashboard
+      <a href="/tecnoperu/index.php" class="btn btn-secondary">
+        <i class="fa-solid fa-arrow-left"></i> Volver al Inicio
       </a>
     </div>
 
