@@ -1,26 +1,36 @@
 <?php
 
-//isset = is-set ¿está asignado?, ¿existe?
-if (isset($_SERVER['REQUEST_METHOD'])){
+if (isset($_SERVER['REQUEST_METHOD'])) {
 
-  //Las respuestas estén formateadas como JSON
+  // CORS y configuración de errores
+  header('Access-Control-Allow-Origin: *');
+  header('Access-Control-Allow-Methods: POST, GET, DELETE, OPTIONS');
+  header('Access-Control-Allow-Headers: Content-Type');
   header('Content-Type: application/json; charset=utf-8');
+
+  ini_set('display_errors', 1);
+  ini_set('display_startup_errors', 1);
+  error_reporting(E_ALL);
+
+  // Validar que el archivo exista
+  if (!file_exists("../models/Producto.php")) {
+    echo json_encode(["error" => "No se encuentra Producto.php"]);
+    exit;
+  }
 
   require_once "../models/Producto.php";
   $producto = new Producto();
 
-  switch ($_SERVER['REQUEST_METHOD']){
+  switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':
-      //Consultas - busquedas
       if ($_GET['task'] == 'getAll') { echo json_encode($producto->getAll()); }
       if ($_GET['task'] == 'getById') { echo json_encode($producto->getById($_GET['idproducto'])); }
       break;
+
     case 'POST':
-      //Los datos llegan del cliente en formato: JSON/XML/TXT/FORMDATA
       $input = file_get_contents('php://input');
       $dataJSON = json_decode($input, true);
 
-      //Registrar un nuevo producto
       $registro = [
         'idmarca'     => htmlspecialchars($dataJSON['idmarca']),
         'tipo'        => htmlspecialchars($dataJSON['tipo']),
@@ -31,19 +41,16 @@ if (isset($_SERVER['REQUEST_METHOD'])){
       ];
 
       $n = $producto->add($registro);
-      echo json_encode(["rows" => $n]); //{"rows": 1}
-
+      echo json_encode(["rows" => $n]);
       break;
+
     case "DELETE":
-      //El id viene en la URL => miweb.com/app/models/productos/7
       $url = $_SERVER['REQUEST_URI'];
       $arrayUrl = explode('/', $url);
       $id = end($arrayUrl);
 
-      $n = $producto->delete( ["idproducto" => $id ] );
-      //lo que envia BACKEND o FRONTEND debe ir como JSON
-      echo json_encode( ['rows' => $n ] );
-
+      $n = $producto->delete(["idproducto" => $id]);
+      echo json_encode(['rows' => $n]);
       break;
   }
 
