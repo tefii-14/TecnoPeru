@@ -2,94 +2,68 @@
 
 require_once "../config/Database.php";
 
-//Contiene toda la lógica
-class Producto{
-  
+class Producto {
+
   private $conexion;
 
-  public function __construct(){
+  public function __construct() {
     $this->conexion = Database::getConexion();
   }
 
-  public function getAll(): array{
-    $result = [];
-    try{
+  public function getAll(): array {
+    try {
       $sql = "SELECT * FROM vs_productos_todos ORDER BY id";
-
-      //Consultas preparadas (SEGURIDAD evitar inyecciones SQL)
       $stmt = $this->conexion->prepare($sql);
       $stmt->execute();
-
-      $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+      throw new Exception("Error al obtener productos: " . $e->getMessage());
     }
-    catch(PDOException $e){
-      throw new Exception($e->getMessage());
-    }
-
-    return $result;
   }
 
-  public function add($params = []): int{
-    $numRows = 0;
-
-    try{
-      //Los parámetros puede ingresar como: ? COMODINES - :valor VARIABLES
-      $sql = "INSERT INTO productos (idmarca, tipo, descripcion, precio, garantia, esnuevo) VALUES (?,?,?,?,?,?)";
-      $stmt = $this->conexion->prepare($sql); 
-
-      $stmt->execute(
-        array(
-          $params["idmarca"],
-          $params["tipo"],
-          $params["descripcion"],
-          $params["precio"],
-          $params["garantia"],
-          $params["esnuevo"]
-        )
-      );
-
-      $numRows = $stmt->rowCount();
-
-    }catch(PDOException $e){
-      throw new Exception($e->getMessage());
-    }
-
-    return $numRows;
-  }
-
-  public function edit(): int{
-    return 1;
-  }
-
-  public function delete($params = []): int{
-    $numRows = 0;
-    
-    try{
-      $sql = "DELETE FROM productos WHERE id = ?"; //eliminar fisica - logica
-      $stmt = $this->conexion->prepare($sql);
-      $stmt->execute(array($params['idproducto']));
-    }catch(PDOException $e){
-      throw new Exception($e->getMessage());
-    }
-    return $numRows;
-  }
-
-  public function getById($id): array{
-    $result = [];
-
+  public function getById($id): array {
     try {
       $sql = "SELECT * FROM productos WHERE id = ?";
       $stmt = $this->conexion->prepare($sql);
-
-      //fetch = objeto null
-      //fechtall
-      $stmt->execute(array($id));
-      $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch(PDOException $e){
-      throw new Exception($e->getMessage());
+      $stmt->execute([$id]);
+      return $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+    } catch (PDOException $e) {
+      throw new Exception("Error al obtener producto por ID: " . $e->getMessage());
     }
-
-    return $result;
   }
 
+  public function add(array $params): int {
+    try {
+      $sql = "INSERT INTO productos (idmarca, tipo, descripcion, precio, garantia, esnuevo) 
+              VALUES (:idmarca, :tipo, :descripcion, :precio, :garantia, :esnuevo)";
+      $stmt = $this->conexion->prepare($sql);
+      $stmt->execute([
+        ':idmarca'     => $params['idmarca'],
+        ':tipo'        => $params['tipo'],
+        ':descripcion' => $params['descripcion'],
+        ':precio'      => $params['precio'],
+        ':garantia'    => $params['garantia'],
+        ':esnuevo'     => $params['esnuevo']
+      ]);
+      return $stmt->rowCount();
+    } catch (PDOException $e) {
+      throw new Exception("Error al insertar producto: " . $e->getMessage());
+    }
+  }
+
+  public function delete(array $params): int {
+    try {
+      $sql = "DELETE FROM productos WHERE id = :idproducto";
+      $stmt = $this->conexion->prepare($sql);
+      $stmt->execute([':idproducto' => $params['idproducto']]);
+      return $stmt->rowCount();
+    } catch (PDOException $e) {
+      throw new Exception("Error al eliminar producto: " . $e->getMessage());
+    }
+  }
+
+  public function edit(array $params): int {
+    // Placeholder para futura implementación
+    return 0;
+  }
 }

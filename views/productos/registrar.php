@@ -6,8 +6,10 @@
   <title>Registro</title>
 
   <!-- Bootstrap -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-  integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- FontAwesome (opcional si quieres íconos) -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
 </head>
 <body>
@@ -19,13 +21,15 @@
         <div class="card-header">
           <div class="row">
             <div class="col"><strong>Nuevo producto</strong></div>
-            <div class="col text-end"><a href="listar.php" class="btn btn-sm btn-outline-success" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Mostrar lista</a></div>
+            <div class="col text-end">
+              <a href="listar.php" class="btn btn-sm btn-outline-success">Mostrar lista</a>
+            </div>
           </div>
         </div>
         <div class="card-body">
-          
+
           <div class="form-floating mb-2">
-            <select name="marcas" id="marcas" class="form-select" required autofocus>
+            <select name="marcas" id="marcas" class="form-select" required>
               <option value="">Seleccione</option>
               <option value="1">Samsung</option>
               <option value="2">Lenovo</option>
@@ -74,18 +78,21 @@
         </div>
       </div> <!-- ./card -->
     </form>
+
     <!-- Botón volver -->
     <div class="text-center mt-4">
-      <?php $baseURL = ""; ?>
-      <a href="<?= $baseURL ?>/index.php" class="btn btn-secondary">
+      <a href="../../index.php" class="btn btn-secondary">
         <i class="fa-solid fa-arrow-left"></i> Volver al Dashboard
       </a>
     </div>
 
   </div> <!-- ./container -->
-  
+
+  <!-- 🔗 Config base url dinámico -->
+  <script src="../assets/js/config.js"></script>
+
+  <!-- Tu JS para enviar datos -->
   <script>
-    //REFERENCIA
     const formulario = document.querySelector("#formulario-registro");
     const marcas = document.querySelector("#marcas");
     const tipo = document.querySelector("#tipo");
@@ -94,9 +101,8 @@
     const garantia = document.querySelector("#garantia");
     const condicion = document.querySelector("#condicion");
 
-    function guardarDato(){
-      //Method: POST (empaquetar los datos JSON) >>> Backend (JSON {"rows": 1})
-      fetch(`../../app/controllers/ProductoController.php`, {
+    function guardarDato() {
+      fetch(BASE_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -108,19 +114,24 @@
           esnuevo     : condicion.value
         })
       })
-        .then(response => { return response.json() })
-        .then(data => { console.log(data) })
-        .catch(error => { console.error(error) });
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          alert("✅ Producto registrado correctamente.");
+          formulario.reset();
+        })
+        .catch(error => {
+          console.error(error);
+          alert("❌ Error al registrar producto.");
+        });
     }
 
     formulario.addEventListener("submit", function (e) {
       e.preventDefault();
-
-      if (confirm("¿Desea registrar el producto?")){
+      if (confirm("¿Desea registrar el producto?")) {
         guardarDato();
       }
     });
-
   </script>
 
 </body>
